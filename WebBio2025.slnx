@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="WebBio2025.API/WebBio2025.API.csproj" />
+  <Project Path="WebBio2025.Application/WebBio2025.Application.csproj" />
+  <Project Path="WebBio2025.Domain/WebBio2025.Domain.csproj" />
+  <Project Path="WebBio2025.Infrastucture/WebBio2025.Infrastucture.csproj" />
+  <Project Path="WebBio2025.Test/WebBio2025.Test.csproj" />
+</Solution>

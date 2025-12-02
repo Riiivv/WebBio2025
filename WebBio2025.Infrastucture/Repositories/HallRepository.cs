@@ -1,0 +1,23 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using WebBio2025.Domain.entities;
+using WebBio2025.Domain.interfaces;
+
+namespace WebBio2025.Infrastucture.Repositories
+{
+    public class HallRepository : IHall
+    {
+        public DatabaseContext _context;
+        public HallRepository(DatabaseContext context)
+        {
+            _context = context;
+        }
+        public async Task <List<Hall>> GetAllHalls()
+        {
+            var g = await _context.Halls.ToListAsync();
+            return g;
+        }
+    }
+}
