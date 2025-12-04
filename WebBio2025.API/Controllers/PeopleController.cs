@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using WebBio2025.Application.DTOs;
+using WebBio2025.Application.Interfaces;
 using WebBio2025.Domain.entities;
 using WebBio2025.Domain.interfaces;
 using WebBio2025.Infrastucture;
@@ -18,41 +20,35 @@ namespace WebBio2025.API.Controllers
     public class PeopleController : ControllerBase
     {
         // private readonly DatabaseContext _context;
-        IPersonRepositories _personRepo;
+        IPersonService _IpersonService;
 
-        public PeopleController(IPersonRepositories personRepo)
+        public PeopleController(IPersonService PersonRepo)
         {
-            _personRepo = personRepo;
+            _IpersonService = PersonRepo;
         }
 
         // GET: api/People
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPersons()
+        public async Task<ActionResult<IEnumerable<PersonDTOResponse>>> GetallPersons()
         {
-            return await _personRepo.GetAll();
+            return Ok(await _IpersonService.GetAllPersons());
         }
+
 
         // DELETE: api/People/5
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePerson(int id)
         {
-            try
-            {
-                var result = await _personRepo.DeleteUserAsync(id);
+            var person = await _IpersonService.DeletePerson(id);
 
-                if (result)
-                    return NoContent(); // 204 (deleted)
-                else
-                    return NotFound();
-            }
-            catch (KeyNotFoundException)
+            if (person == null)
             {
-                return NotFound("User not found");
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "an error has occured: " + ex.Message);
-            }
+            _IpersonService.DeletePerson(id);
+            await _IpersonService.DeletePerson(id);
+
+            return NoContent();
         }
     }
 }

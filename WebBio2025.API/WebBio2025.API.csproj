@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebBio2025.Application\WebBio2025.Application.csproj" />
     <ProjectReference Include="..\WebBio2025.Infrastucture\WebBio2025.Infrastucture.csproj" />
   </ItemGroup>
 

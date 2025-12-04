@@ -1,3 +1,6 @@
+using WebBio2025.Application.Interfaces;
+using WebBio2025.Application.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,8 +9,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IPersonRepositories, PersonRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IHall, HallRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 //builder.Services.AddScoped<>
 

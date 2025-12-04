@@ -7,7 +7,7 @@ using WebBio2025.Domain.interfaces;
 
 namespace WebBio2025.Infrastucture.Repositories
 {
-    public class PersonRepository : IPersonRepositories
+    public class PersonRepository : IPersonRepository
     {
         public DatabaseContext _context;
         public PersonRepository(DatabaseContext context) {
