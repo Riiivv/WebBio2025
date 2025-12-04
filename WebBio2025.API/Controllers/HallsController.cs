@@ -8,51 +8,47 @@ using Microsoft.EntityFrameworkCore;
 using WebBio2025.Domain.entities;
 using WebBio2025.Domain.interfaces;
 using WebBio2025.Infrastucture;
-using WebBio2025.Infrastucture.Repositories;
 
 namespace WebBio2025.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    public class PeopleController : ControllerBase
+    public class HallsController : ControllerBase
     {
-        // private readonly DatabaseContext _context;
-        IPersonRepositories _personRepo;
+        private readonly IHall _hallRepo;
 
-        public PeopleController(IPersonRepositories personRepo)
+        public HallsController(IHall hallrepo)
         {
-            _personRepo = personRepo;
+            _hallRepo = hallrepo;
         }
 
-        // GET: api/People
+        // GET: api/Halls
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPersons()
+        public async Task<ActionResult<IEnumerable<Hall>>> GetHalls()
         {
-            return await _personRepo.GetAll();
+            return await _hallRepo.GetAllHalls();
         }
-
-        // DELETE: api/People/5
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeletePerson(int id)
+        public async Task<IActionResult> DeleteHall(int id)
         {
             try
             {
-                var result = await _personRepo.DeleteUserAsync(id);
-
-                if (result)
+                var hall = await _hallRepo.DeleteHallAsync(id);
+                if (hall)
                     return NoContent(); // 204 (deleted)
                 else
                     return NotFound();
             }
             catch (KeyNotFoundException)
             {
-                return NotFound("User not found");
+                return NotFound("Hall not found");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "an error has occured: " + ex.Message);
             }
+
         }
+
     }
 }

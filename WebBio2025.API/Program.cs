@@ -1,20 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
-using WebBio2025.Domain.interfaces;
-using WebBio2025.Infrastucture.Repositories;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-string sql = "Server=(localdb)\\MSSQLLocalDB;Database=DecemberDb; Trusted_Connection=true; " +
-                "Trust Server Certificate=true; Integrated Security=true; Encrypt=True;";
-builder.Services.AddDbContext<WebBio2025.Infrastucture.DatabaseContext>(options =>
-    options.UseSqlServer(sql));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseSqlServer(connectionString));
+
 builder.Services.AddScoped<IPersonRepositories, PersonRepository>();
 builder.Services.AddScoped<IHall, HallRepository>();
+
 //builder.Services.AddScoped<>
 
 builder.Services.AddControllers();
@@ -38,3 +32,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+//string sql = "Server=(localdb)\\MSSQLLocalDB;Database=DecemberDb; Trusted_Connection=true; Trust Server Certificate=true; Integrated Security=true; Encrypt=True;";
+//builder.Services.AddDbContext<WebBio2025.Infrastucture.DatabaseContext>(options =>
+//    options.UseSqlServer(sql));

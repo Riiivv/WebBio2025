@@ -8,51 +8,47 @@ using Microsoft.EntityFrameworkCore;
 using WebBio2025.Domain.entities;
 using WebBio2025.Domain.interfaces;
 using WebBio2025.Infrastucture;
-using WebBio2025.Infrastucture.Repositories;
 
 namespace WebBio2025.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    public class PeopleController : ControllerBase
+    public class MoviesController : ControllerBase
     {
-        // private readonly DatabaseContext _context;
-        IPersonRepositories _personRepo;
+        private readonly IMovies _MovieRepo;
 
-        public PeopleController(IPersonRepositories personRepo)
+        public MoviesController(IMovies movie)
         {
-            _personRepo = personRepo;
+            _MovieRepo = movie;
         }
 
-        // GET: api/People
+        // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPersons()
+        public async Task<ActionResult<IEnumerable<Movies>>> GetMovies()
         {
-            return await _personRepo.GetAll();
+            return await _MovieRepo.GetAllMovies();
         }
 
-        // DELETE: api/People/5
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeletePerson(int id)
+        public async Task<IActionResult> DeleteMovie(int id)
         {
             try
             {
-                var result = await _personRepo.DeleteUserAsync(id);
-
-                if (result)
+                var movie = await _MovieRepo.DeleteMovieAsync(id);
+                if (movie)
                     return NoContent(); // 204 (deleted)
                 else
                     return NotFound();
             }
             catch (KeyNotFoundException)
             {
-                return NotFound("User not found");
+                return NotFound("Movie not found");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "an error has occured: " + ex.Message);
             }
         }
+
     }
 }

@@ -16,8 +16,17 @@ namespace WebBio2025.Infrastucture.Repositories
         }
         public async Task <List<Hall>> GetAllHalls()
         {
-            var g = await _context.Halls.ToListAsync();
-            return g;
+            var hall = await _context.Halls.ToListAsync();
+            return hall;
         }
-    }
+        public async Task <bool> DeleteHallAsync(int id)
+        {
+            var hall = await _context.Halls.FindAsync(id);
+            if (hall == null) throw new KeyNotFoundException("Hall not found");
+            _context.Halls.Remove(hall);
+            await _context.SaveChangesAsync();
+            return true;
+
+        }
+    }   
 }

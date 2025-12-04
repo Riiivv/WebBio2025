@@ -5,9 +5,8 @@ using WebBio2025.Domain.entities;
 
 namespace WebBio2025.Domain.interfaces
 {
-    public interface IHall
+    public interface ITicket
     {
-        Task<List<Hall>> GetAllHalls();
-        Task<bool> DeleteHallAsync(int id);
+        Task<List<Ticket>> GetAllTickets();
     }
 }

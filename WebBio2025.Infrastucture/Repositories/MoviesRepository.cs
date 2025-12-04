@@ -18,9 +18,20 @@ namespace WebBio2025.Infrastucture.Repositories
 
         public async Task <List<Movies>> GetAllMovies()
         {
-            var movies = await _context.Movies.ToListAsync();
-            return movies;
+            var movie = await _context.Movies.ToListAsync();
+            return movie;
         }
 
+        public async Task<bool> DeleteMovieAsync(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
+            {
+                throw new KeyNotFoundException("Movie not found");
+            }
+            _context.Movies.Remove(movie);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

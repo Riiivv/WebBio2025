@@ -8,5 +8,6 @@ namespace WebBio2025.Domain.interfaces
     public interface IMovies
     {
         Task<List<Movies>> GetAllMovies();
+        Task<bool> DeleteMovieAsync(int id);
     }
 }
