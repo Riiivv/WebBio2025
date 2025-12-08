@@ -33,6 +33,22 @@ namespace WebBio2025.API.Controllers
         {
             return Ok(await _IpersonService.GetAllPersons());
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdatePerson(int id, PersonDTORequest person)
+        {
+            if (id != person.Id)
+            {
+                return BadRequest();
+            }
+
+            PersonDTOResponse result = await _IpersonService.UpdatePerson(person);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
 
 
         // DELETE: api/People/5
