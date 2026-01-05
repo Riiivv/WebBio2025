@@ -18,6 +18,6 @@ namespace WebBio2025.Domain.entities
         public decimal Price { get; set; } = 150;
 
         // Navigation
-        public ICollection<Ticket> Tickets { get; set; }
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }

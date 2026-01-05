@@ -9,15 +9,75 @@ namespace WebBio2025.Infrastucture.Repositories
 {
     public class TicketRepository : ITicket
     {
-        public DatabaseContext _context;
+        private readonly DatabaseContext _context;
+
         public TicketRepository(DatabaseContext context)
         {
             _context = context;
         }
+
         public async Task<List<Ticket>> GetAllTickets()
         {
-            var ticket = await _context.Tickets.ToListAsync();
-            return ticket;
+            return await _context.Tickets
+                .Include(t => t.Movie)
+                .Include(t => t.Seat)
+                .ToListAsync();
+        }
+
+        public async Task<Ticket?> GetTicketById(int id)
+        {
+            return await _context.Tickets
+                .Include(t => t.Movie)
+                .Include(t => t.Seat)
+                .FirstOrDefaultAsync(t => t.TicketId == id);
+        }
+
+        public async Task<Ticket?> CreateTicket(Ticket ticket)
+        {
+            _context.Tickets.Add(ticket);
+            await _context.SaveChangesAsync();
+            return await GetTicketById(ticket.TicketId);
+        }
+
+        public async Task<Ticket?> UpdateTicket(Ticket ticket)
+        {
+            var entity = await _context.Tickets.FindAsync(ticket.TicketId);
+            if (entity == null) return null;
+
+            entity.TicketPrice = ticket.TicketPrice;
+            entity.SeatId = ticket.SeatId;
+            entity.MovieId = ticket.MovieId;
+
+            await _context.SaveChangesAsync();
+            return await GetTicketById(entity.TicketId);
+        }
+
+        public async Task<bool> DeleteTicketAsync(int id)
+        {
+            var entity = await _context.Tickets.FindAsync(id);
+            if (entity == null) return false;
+
+            _context.Tickets.Remove(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<Ticket>> GetTicketsByMovieId(int movieId)
+        {
+            return await _context.Tickets
+                .Include(t => t.Movie)
+                .Include(t => t.Seat)
+                .Where(t => t.MovieId == movieId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Ticket>> GetTicketsBySeatId(int seatId)
+        {
+            return await _context.Tickets
+                .Include(t => t.Movie)
+                .Include(t => t.Seat)
+                .Where(t => t.SeatId == seatId)
+                .ToListAsync();
         }
     }
 }

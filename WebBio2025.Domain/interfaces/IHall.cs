@@ -8,6 +8,9 @@ namespace WebBio2025.Domain.interfaces
     public interface IHall
     {
         Task<List<Hall>> GetAllHalls();
+        Task<Hall?> GetHallById(int id);
+        Task<Hall?> CreateHall(Hall hall);
+        Task<Hall?> UpdateHall(Hall hall);
         Task<bool> DeleteHallAsync(int id);
     }
 }

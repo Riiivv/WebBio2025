@@ -10,9 +10,10 @@ namespace WebBio2025.Application.Interfaces
     public interface IPersonService
     {
         Task<IEnumerable<PersonDTOResponse>> GetAllPersons();
-
-        Task<ActionResult> UpdatePerson(int id, PersonDTORequest person);
-        Task<IActionResult> DeletePerson(int id);
+        Task<PersonDTOResponse?> GetPersonById(int id);
+        Task<PersonDTOResponse?> CreatePerson(PersonDTORequest person);
+        Task<PersonDTOResponse?> UpdatePerson(PersonDTORequest person);
+        Task<bool> DeletePerson(int id);
 
     }
 }

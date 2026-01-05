@@ -9,9 +9,22 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
 builder.Services.AddScoped<IHall, HallRepository>();
+builder.Services.AddScoped<IMovies, MoviesRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<ISeat, SeatRepository>();
+builder.Services.AddScoped<IShowtime, ShowtimeRepository>();
+builder.Services.AddScoped<ITicket, TicketRepository>();
+
+
+builder.Services.AddScoped<IHallService, HallService>();
+builder.Services.AddScoped<IMoviesService, MoviesService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<ISeatService, SeatService>();
+builder.Services.AddScoped<IShowtimeService, ShowtimeService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+
 
 //builder.Services.AddScoped<>
 

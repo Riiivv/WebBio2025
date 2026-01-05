@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using WebBio2025.Application.DTOs;
+using WebBio2025.Application.Interfaces;
 using WebBio2025.Domain.entities;
 using WebBio2025.Domain.interfaces;
 using WebBio2025.Infrastucture;
@@ -15,40 +17,62 @@ namespace WebBio2025.API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly IMovies _MovieRepo;
+        private readonly IMoviesService _moviesService;
 
-        public MoviesController(IMovies movie)
+        public MoviesController(IMoviesService moviesService)
         {
-            _MovieRepo = movie;
+            _moviesService = moviesService;
         }
 
-        // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movies>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MoviesDTOResponse>>> GetAllMovies()
         {
-            return await _MovieRepo.GetAllMovies();
+            var movies = await _moviesService.GetAllMovies();
+            return Ok(movies);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<MoviesDTOResponse>> GetMovieById(int id)
+        {
+            var movie = await _moviesService.GetMovieById(id);
+            if (movie == null) return NotFound();
+            return Ok(movie);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<MoviesDTOResponse>> CreateMovie([FromBody] MoviesDTORequest request)
+        {
+            if (request == null)
+                return BadRequest("Request body cannot be empty.");
+
+            var created = await _moviesService.CreateMovie(request);
+            if (created == null)
+                return BadRequest("Failed to create movie.");
+
+            return CreatedAtAction(nameof(GetMovieById), new { id = created.MoviesId }, created);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<MoviesDTOResponse>> UpdateMovie(int id, [FromBody] MoviesDTORequest request)
+        {
+            if (request == null)
+                return BadRequest("Request body cannot be empty.");
+
+            if (id != request.MoviesId)
+                return BadRequest("Route ID does not match request body ID.");
+
+            var updated = await _moviesService.UpdateMovie(request);
+            if (updated == null) return NotFound();
+
+            return Ok(updated);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
-            try
-            {
-                var movie = await _MovieRepo.DeleteMovieAsync(id);
-                if (movie)
-                    return NoContent(); // 204 (deleted)
-                else
-                    return NotFound();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Movie not found");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "an error has occured: " + ex.Message);
-            }
+            var deleted = await _moviesService.DeleteMovie(id);
+            if (!deleted) return NotFound("Movie not found");
+            return NoContent();
         }
-
     }
 }
