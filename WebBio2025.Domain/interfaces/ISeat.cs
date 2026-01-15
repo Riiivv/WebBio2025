@@ -12,5 +12,7 @@ namespace WebBio2025.Domain.interfaces
         Task<Seat?> CreateSeat(Seat seat);
         Task<Seat?> UpdateSeat(Seat seat);
         Task<bool> DeleteSeatAsync(int id);
+
+        Task CreateSeatsAsync(IEnumerable<Seat> seats);
     }
 }

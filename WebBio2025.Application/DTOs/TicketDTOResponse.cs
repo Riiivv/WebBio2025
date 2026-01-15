@@ -10,8 +10,8 @@ namespace WebBio2025.Application.DTOs
         public decimal TicketPrice { get; set; }
 
         public int SeatId { get; set; }
-
+        public int ShowTimeId { get; set; }
         public int MovieId { get; set; }
-        public string? MovieTitle { get; set; }   // praktisk til frontend (valgfrit)
+        public string? MovieTitle { get; set; } 
     }
 }

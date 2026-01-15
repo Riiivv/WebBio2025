@@ -18,8 +18,6 @@ namespace WebBio2025.Infrastucture.Repositories
 
         public async Task<List<Seat>> GetAllSeats()
         {
-            // Hvis du vil hente Hall med, brug Include:
-            // return await _context.Seats.Include(s => s.Hall).ToListAsync();
             return await _context.Seats.ToListAsync();
         }
 
@@ -43,6 +41,7 @@ namespace WebBio2025.Infrastucture.Repositories
             entity.RowNumber = seat.RowNumber;
             entity.SeatNumber = seat.SeatNumber;
             entity.HallId = seat.HallId;
+            entity.SeatType = seat.SeatType;
 
             await _context.SaveChangesAsync();
             return entity;
@@ -56,6 +55,12 @@ namespace WebBio2025.Infrastucture.Repositories
             _context.Seats.Remove(seat);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task CreateSeatsAsync(IEnumerable<Seat> seats)
+        {
+            _context.Seats.AddRange(seats);
+            await _context.SaveChangesAsync();
         }
     }
 }

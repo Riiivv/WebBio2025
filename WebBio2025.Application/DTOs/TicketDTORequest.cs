@@ -8,6 +8,7 @@ namespace WebBio2025.Application.DTOs
     {
         public int TicketId { get; set; }     // ved Create kan den være 0
         public decimal TicketPrice { get; set; }
+        public int ShowtimeId { get; set; }
 
         public int SeatId { get; set; }
         public int MovieId { get; set; }

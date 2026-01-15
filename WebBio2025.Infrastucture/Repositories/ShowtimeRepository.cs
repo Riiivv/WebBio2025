@@ -37,6 +37,8 @@ namespace WebBio2025.Infrastucture.Repositories
         public async Task<Showtime?> CreateShowtime(Showtime showtime)
         {
             _context.Showtimes.Add(showtime);
+            // Debug
+            Console.WriteLine($"About to save Showtime: HallId={showtime.HallId}, MovieId={showtime.MovieId}");
             await _context.SaveChangesAsync();
 
             return await GetShowtimeById(showtime.ShowtimeId);

@@ -14,6 +14,7 @@ namespace WebBio2025.Domain.interfaces
         Task<bool> DeleteTicketAsync(int id);
 
         // Valgfrit men nyttigt:
+        Task<List<Ticket>> GetTicketsByShowtimeId(int showtimeId);
         Task<List<Ticket>> GetTicketsByMovieId(int movieId);
         Task<List<Ticket>> GetTicketsBySeatId(int seatId);
     }

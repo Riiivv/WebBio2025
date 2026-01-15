@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WebBio2025.Domain.entities;
 using WebBio2025.Domain.interfaces;
 
@@ -19,7 +16,6 @@ namespace WebBio2025.Infrastucture.Repositories
         public async Task<List<Ticket>> GetAllTickets()
         {
             return await _context.Tickets
-                .Include(t => t.Movie)
                 .Include(t => t.Seat)
                 .ToListAsync();
         }
@@ -27,7 +23,6 @@ namespace WebBio2025.Infrastucture.Repositories
         public async Task<Ticket?> GetTicketById(int id)
         {
             return await _context.Tickets
-                .Include(t => t.Movie)
                 .Include(t => t.Seat)
                 .FirstOrDefaultAsync(t => t.TicketId == id);
         }
@@ -46,7 +41,7 @@ namespace WebBio2025.Infrastucture.Repositories
 
             entity.TicketPrice = ticket.TicketPrice;
             entity.SeatId = ticket.SeatId;
-            entity.MovieId = ticket.MovieId;
+            entity.ShowtimeId = ticket.ShowtimeId; // hvis du bruger showtime
 
             await _context.SaveChangesAsync();
             return await GetTicketById(entity.TicketId);
@@ -62,22 +57,25 @@ namespace WebBio2025.Infrastucture.Repositories
             return true;
         }
 
-        public async Task<List<Ticket>> GetTicketsByMovieId(int movieId)
-        {
-            return await _context.Tickets
-                .Include(t => t.Movie)
-                .Include(t => t.Seat)
-                .Where(t => t.MovieId == movieId)
-                .ToListAsync();
-        }
-
         public async Task<List<Ticket>> GetTicketsBySeatId(int seatId)
         {
             return await _context.Tickets
-                .Include(t => t.Movie)
                 .Include(t => t.Seat)
                 .Where(t => t.SeatId == seatId)
                 .ToListAsync();
+        }
+
+        public async Task<List<Ticket>> GetTicketsByShowtimeId(int showtimeId)
+        {
+            return await _context.Tickets
+                .Where(t => t.ShowtimeId == showtimeId)
+                .ToListAsync();
+        }
+
+        // Hvis dit interface stadig kræver denne:
+        public async Task<List<Ticket>> GetTicketsByMovieId(int movieId)
+        {
+            return new List<Ticket>(); // Movie findes ikke længere på Ticket
         }
     }
 }

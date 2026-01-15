@@ -50,7 +50,6 @@ namespace WebBio2025.Application.Services
         {
             var entity = new Movies
             {
-                MoviesId = request.MoviesId,
                 Title = request.Title,
                 Genre = request.Genre,
                 ReleaseDate = request.ReleaseDate,

@@ -45,7 +45,6 @@ namespace WebBio2025.Application.Services
         {
             var entity = new Showtime
             {
-                ShowtimeId = request.ShowtimeId,
                 MovieId = request.MovieId,
                 HallId = request.HallId,
                 StartTime = request.StartTime,

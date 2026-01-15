@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WebBio2025.Application.DTOs;
+﻿using WebBio2025.Application.DTOs;
 using WebBio2025.Application.Interfaces;
 using WebBio2025.Domain.entities;
 using WebBio2025.Domain.interfaces;
@@ -24,8 +21,7 @@ namespace WebBio2025.Application.Services
                 TicketId = t.TicketId,
                 TicketPrice = t.TicketPrice,
                 SeatId = t.SeatId,
-                MovieId = t.MovieId,
-                MovieTitle = t.Movie?.Title
+                ShowTimeId = t.ShowtimeId
             };
         }
 
@@ -46,10 +42,9 @@ namespace WebBio2025.Application.Services
         {
             var entity = new Ticket
             {
-                TicketId = request.TicketId,
                 TicketPrice = request.TicketPrice,
                 SeatId = request.SeatId,
-                MovieId = request.MovieId
+                ShowtimeId = request.ShowtimeId
             };
 
             var created = await _ticketRepository.CreateTicket(entity);
@@ -65,7 +60,7 @@ namespace WebBio2025.Application.Services
                 TicketId = request.TicketId,
                 TicketPrice = request.TicketPrice,
                 SeatId = request.SeatId,
-                MovieId = request.MovieId
+                ShowtimeId = request.ShowtimeId
             };
 
             var updated = await _ticketRepository.UpdateTicket(entity);
@@ -79,16 +74,21 @@ namespace WebBio2025.Application.Services
             return await _ticketRepository.DeleteTicketAsync(id);
         }
 
-        public async Task<IEnumerable<TicketDTOResponse>> GetTicketsByMovieId(int movieId)
-        {
-            var tickets = await _ticketRepository.GetTicketsByMovieId(movieId);
-            return tickets.Select(MapToResponse);
-        }
-
         public async Task<IEnumerable<TicketDTOResponse>> GetTicketsBySeatId(int seatId)
         {
             var tickets = await _ticketRepository.GetTicketsBySeatId(seatId);
             return tickets.Select(MapToResponse);
+        }
+
+        public async Task<IEnumerable<TicketDTOResponse>> GetTicketsByShowtimeId(int showtimeId)
+        {
+            var tickets = await _ticketRepository.GetTicketsByShowtimeId(showtimeId);
+            return tickets.Select(MapToResponse);
+        }
+
+        public async Task<IEnumerable<TicketDTOResponse>> GetTicketsByMovieId(int movieId)
+        {
+            return new List<TicketDTOResponse>();
         }
     }
 }

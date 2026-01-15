@@ -12,8 +12,8 @@ using WebBio2025.Infrastucture;
 namespace WebBio2025.Infrastucture.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260104134253_FixedEntities")]
-    partial class FixedEntities
+    [Migration("20260115050045_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,7 +80,7 @@ namespace WebBio2025.Infrastucture.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("HallId")
+                    b.Property<int?>("HallId")
                         .HasColumnType("int");
 
                     b.Property<string>("Lastname")
@@ -91,7 +91,7 @@ namespace WebBio2025.Infrastucture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MoviesId")
+                    b.Property<int?>("MoviesId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -124,11 +124,37 @@ namespace WebBio2025.Infrastucture.Migrations
                     b.Property<int>("SeatNumber")
                         .HasColumnType("int");
 
+                    b.Property<int>("SeatType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.HasKey("SeatId");
 
-                    b.HasIndex("HallId");
-
                     b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("WebBio2025.Domain.entities.SeatHold", b =>
+                {
+                    b.Property<int>("ShowtimeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HoldToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ShowtimeId", "SeatId");
+
+                    b.ToTable("SeatHolds");
                 });
 
             modelBuilder.Entity("WebBio2025.Domain.entities.Showtime", b =>
@@ -168,13 +194,13 @@ namespace WebBio2025.Infrastucture.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketId"));
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SeatId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ShowtimeId")
+                    b.Property<int>("ShowtimeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ShowtimeId1")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TicketPrice")
@@ -182,11 +208,11 @@ namespace WebBio2025.Infrastucture.Migrations
 
                     b.HasKey("TicketId");
 
-                    b.HasIndex("MovieId");
-
                     b.HasIndex("SeatId");
 
                     b.HasIndex("ShowtimeId");
+
+                    b.HasIndex("ShowtimeId1");
 
                     b.ToTable("Tickets");
                 });
@@ -195,30 +221,15 @@ namespace WebBio2025.Infrastucture.Migrations
                 {
                     b.HasOne("WebBio2025.Domain.entities.Hall", "Hall")
                         .WithMany("Persons")
-                        .HasForeignKey("HallId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HallId");
 
                     b.HasOne("WebBio2025.Domain.entities.Movies", "Movies")
                         .WithMany("Persons")
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MoviesId");
 
                     b.Navigation("Hall");
 
                     b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("WebBio2025.Domain.entities.Seat", b =>
-                {
-                    b.HasOne("WebBio2025.Domain.entities.Hall", "Hall")
-                        .WithMany()
-                        .HasForeignKey("HallId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hall");
                 });
 
             modelBuilder.Entity("WebBio2025.Domain.entities.Showtime", b =>
@@ -242,25 +253,25 @@ namespace WebBio2025.Infrastucture.Migrations
 
             modelBuilder.Entity("WebBio2025.Domain.entities.Ticket", b =>
                 {
-                    b.HasOne("WebBio2025.Domain.entities.Movies", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebBio2025.Domain.entities.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebBio2025.Domain.entities.Showtime", "showtime")
+                        .WithMany()
+                        .HasForeignKey("ShowtimeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WebBio2025.Domain.entities.Showtime", null)
                         .WithMany("Tickets")
-                        .HasForeignKey("ShowtimeId");
-
-                    b.Navigation("Movie");
+                        .HasForeignKey("ShowtimeId1");
 
                     b.Navigation("Seat");
+
+                    b.Navigation("showtime");
                 });
 
             modelBuilder.Entity("WebBio2025.Domain.entities.Hall", b =>

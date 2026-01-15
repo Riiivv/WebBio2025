@@ -11,6 +11,6 @@ namespace WebBio2025.Domain.entities
         public string Genre { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Director { get; set; }
-        public List<Person> Persons { get; set; } = new(); // navigation property
+        public List<Person> Persons { get; set; } = new();
     }
 }

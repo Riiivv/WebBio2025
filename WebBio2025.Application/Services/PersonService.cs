@@ -47,12 +47,9 @@ namespace WebBio2025.Application.Services
         {
             var entity = new Person
             {
-                Id = request.Id, // ofte lader man DB sætte Id - men jeg matcher din DTO
                 Name = request.Name,
                 Lastname = request.Lastname,
-                Mail = request.Mail,
-                Movies = request.Movies,
-                Hall = request.Hall
+                Mail = request.Mail
             };
 
             var created = await _personRepository.CreatePerson(entity);
@@ -73,9 +70,7 @@ namespace WebBio2025.Application.Services
                 Id = request.Id,
                 Name = request.Name,
                 Lastname = request.Lastname,
-                Mail = request.Mail,
-                Movies = request.Movies,
-                Hall = request.Hall
+                Mail = request.Mail
             };
 
             var updated = await _personRepository.UpdatePerson(entity);
@@ -91,8 +86,6 @@ namespace WebBio2025.Application.Services
 
         public async Task<bool> DeletePerson(int id)
         {
-            // Repository kaster KeyNotFoundException hvis ikke findes (som du har skrevet)
-            // Jeg håndterer det her og returnerer false i stedet.
             try
             {
                 return await _personRepository.DeleteUserAsync(id);
